@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {
-  View, TextInput, TouchableOpacity, FlatList,
+  View, TextInput, TouchableOpacity, FlatList, Text, ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -15,32 +16,78 @@ import style from './styles';
 export default class SearchRepos extends Component {
   state = {
     inputRep: '',
+    error: '',
+    loadingButton: false,
     repoList: [],
+    refreshing: false,
+    loadingList: true,
   };
 
-  checkRepExist = async (input) => {
-    const { data } = await api.get(`/repos/${input}`);
-    console.tron.log(data);
+  async componentDidMount() {
+    this.loadRepositories();
+  }
 
-    return data;
+  loadRepositories = async () => {
+    this.setState({ refreshing: true });
+
+    const repositories = await AsyncStorage.getItem('@Gitissues:repos');
+
+    this.setState({
+      repoList: JSON.parse(repositories) || [],
+      inputRep: '',
+      error: '',
+      refreshing: false,
+      loadingList: false,
+    });
   };
 
   addRepository = async () => {
-    const { inputRep, repoList } = this.state;
+    const { inputRep, repoList, loadingList } = this.state;
 
-    try {
-      const repository = await this.checkRepExist(inputRep);
+    if (loadingList) return;
 
-      this.setState({ repoList: [...repoList, repository] });
-    } catch (error) {
-      console.tron.log(error);
+    // inicia o loading do botao
+    this.setState({ loadingButton: true, loadingList: true });
+
+    if (!inputRep) {
+      this.setState({
+        error: 'Favor informar um repositório',
+        loadingButton: false,
+        loadingList: false,
+      });
+      return;
     }
+    try {
+      // busca o repositorio, caso de erro vai para o catch
+      const { data } = await api.get(`/repos/${inputRep}`);
+
+      // verifica se repositorio ja existe
+      if (repoList.find(item => item.id === data.id)) {
+        this.setState({ error: 'Repositório existente' });
+        return;
+      }
+
+      this.setState({ repoList: [data, ...repoList], error: '', inputRep: '' });
+
+      // salva no armazenamento local a listagem atualizada
+      await AsyncStorage.setItem('@Gitissues:repos', JSON.stringify([data, ...repoList]));
+    } catch (error) {
+      this.setState({ error: 'Não foi possível encontrar o repositório' });
+    } finally {
+      this.setState({ loadingButton: false, loadingList: false });
+    }
+  };
+
+  cleanError = () => {
+    this.setState({ error: '' });
   };
 
   renderItemList = ({ item }) => <RepoItem repository={item} />;
 
   render() {
-    const { repoList, inputRep } = this.state;
+    const {
+      repoList, inputRep, error, loadingButton, refreshing, loadingList,
+    } = this.state;
     return (
       <View style={style.container}>
         <Header title="GitIssues" />
@@ -55,14 +102,26 @@ export default class SearchRepos extends Component {
             onChangeText={text => this.setState({ inputRep: text })}
           />
           <TouchableOpacity onPress={this.addRepository} style={style.buttonPlus}>
-            <Icon name="plus" size={20} style={style.icon} />
+            {loadingButton ? (
+              <ActivityIndicator size="small" />
+            ) : (
+              <Icon name="plus" size={20} style={style.icon} />
+            )}
           </TouchableOpacity>
         </View>
+        {!!error && (
+          <Text onPress={this.cleanError} style={style.textError}>
+            {error}
+          </Text>
+        )}
+        {loadingList && <ActivityIndicator size="large" style={style.loadList} />}
         <FlatList
           data={repoList}
-          style={style.listView}
           keyExtractor={item => String(item.id)}
           renderItem={this.renderItemList}
+          refreshing={refreshing}
+          onRefresh={this.loadRepositories}
+          contentContainerStyle={style.listView}
         />
       </View>
     );

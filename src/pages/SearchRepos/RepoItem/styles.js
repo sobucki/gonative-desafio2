@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: metrics.baseRadius,
     alignItems: 'center',
-    padding: 20,
+    padding: metrics.basePadding,
     marginBottom: metrics.baseMargin,
   },
   logo: {

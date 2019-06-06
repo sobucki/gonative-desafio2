@@ -7,10 +7,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lighter,
   },
   form: {
-    // justifyContent: 'center',
     alignItems: 'center',
-    margin: metrics.baseMargin,
-    paddingBottom: metrics.basePadding,
+    padding: metrics.basePadding,
     borderBottomWidth: 1,
     borderBottomColor: colors.light,
     flexDirection: 'row',
@@ -18,9 +16,9 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colors.white,
     borderRadius: metrics.baseRadius,
-    height: 44,
+    // height: 44,
     flex: 1,
-    marginHorizontal: metrics.baseMargin,
+    // marginHorizontal: metrics.baseMargin,
     textAlign: 'center',
   },
   icon: {
@@ -37,6 +35,15 @@ const styles = StyleSheet.create({
   },
   //= ================
   listView: {
+    padding: metrics.basePadding,
+  },
+  textError: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: colors.danger,
+    paddingTop: metrics.basePadding,
+  },
+  loadList: {
     padding: metrics.basePadding,
   },
 });
