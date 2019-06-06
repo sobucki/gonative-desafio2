@@ -1,3 +1,5 @@
+import '~/config/ReactotronConfig';
+import '~/config/DevToolsConfig';
 import React, { Component } from 'react';
 
 // import { View, Text } from 'react-native';
