@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-
-import { View, Text } from 'react-native';
+import PropType from 'prop-types';
+import { View, FlatList } from 'react-native';
 
 import api from '~/services/api';
+import Header from '~/components/Header';
+import IssueItem from './IssueItem';
 
-// import { Container } from './styles';
+import style from './styles';
 
 export default class Issues extends Component {
+  static propTypes = {
+    navigation: PropType.shape({}).isRequired,
+  };
+
   state = {
     data: [],
   };
@@ -21,13 +27,20 @@ export default class Issues extends Component {
     this.setState({ data });
   };
 
+  renderItemList = ({ item }) => <IssueItem issue={item} />;
+
   render() {
     const { data } = this.state;
     return (
-      <View>
-        {data.map(info => (
-          <Text>{info.title}</Text>
-        ))}
+      <View style={style.container}>
+        <Header title="Issues" hasBackButton />
+
+        <FlatList
+          data={data}
+          keyExtractor={issue => String(issue.id)}
+          renderItem={this.renderItemList}
+          contentContainerStyle={style.listIssues}
+        />
       </View>
     );
   }

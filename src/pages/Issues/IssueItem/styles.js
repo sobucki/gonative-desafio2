@@ -2,29 +2,30 @@ import { StyleSheet } from 'react-native';
 import { colors, metrics } from '~/styles';
 
 const styles = StyleSheet.create({
-  repoItem: {
-    // width: 100,
+  container: {
     height: 100,
-    flexDirection: 'row',
     backgroundColor: colors.white,
     borderRadius: metrics.baseRadius,
-    alignItems: 'center',
     padding: metrics.basePadding,
     marginBottom: metrics.baseMargin,
+    alignItems: 'center',
+    flexDirection: 'row',
   },
-  logo: {
-    height: 50,
+  avatar: {
     width: 50,
+    height: 50,
+    borderRadius: 25,
   },
-  infoRepo: {
+  infosContainer: {
     padding: metrics.basePadding,
+    justifyContent: 'center',
     flex: 1,
   },
-  nameRepo: {
-    fontSize: 16,
+  title: {
     fontWeight: 'bold',
+    fontSize: 16,
   },
-  nameOrg: {
+  user: {
     fontSize: 14,
     color: colors.regular,
   },
