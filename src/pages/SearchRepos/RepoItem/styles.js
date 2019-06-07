@@ -3,7 +3,6 @@ import { colors, metrics } from '~/styles';
 
 const styles = StyleSheet.create({
   repoItem: {
-    // width: 100,
     height: 100,
     flexDirection: 'row',
     backgroundColor: colors.white,

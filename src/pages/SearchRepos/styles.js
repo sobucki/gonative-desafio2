@@ -16,15 +16,11 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colors.white,
     borderRadius: metrics.baseRadius,
-    // height: 44,
     flex: 1,
-    // marginHorizontal: metrics.baseMargin,
     textAlign: 'center',
   },
   icon: {
     color: colors.darker,
-    // paddingRight: metrics.baseMargin,
-    // flex: 1,
     alignItems: 'center',
   },
   buttonPlus: {
@@ -33,7 +29,6 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
   },
-  //= ================
   listView: {
     padding: metrics.basePadding,
   },
